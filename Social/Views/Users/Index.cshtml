@@ -1,0 +1,16 @@
+﻿@using Social.Models
+@model List<User>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<ul>
+    @foreach (var user in Model)
+    {
+        <li>@user.UserName</li>
+    }
+
+</ul>

@@ -16,7 +16,7 @@ namespace Social.Models
         public string Username { get; set; }
 
         [Required]
-        [StringLength(255)]
+        [StringLength(100)]
         public string Password { get; set; }
 
         [StringLength(255)]

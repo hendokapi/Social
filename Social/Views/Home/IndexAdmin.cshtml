@@ -37,14 +37,24 @@
     <div class="col-12 col-lg-6">
         <div class="h-100 p-4 border rounded bg-light text-center d-flex flex-column justify-content-between">
             <h2>Most commented</h2>
-            <div>@ViewBag.PostMostCommented</div>
+            <h3>@ViewBag.PostMostCommented.User.Username</h3>
+            <h4>Comments: @ViewBag.PostMostCommentedComments</h4>
+            <div>
+                @ViewBag.PostMostCommented.Contents
+                @Html.ActionLink("Read...", "Details", "Posts", new { id = ViewBag.PostMostCommented.PostId }, null)
+            </div>
         </div>
     </div>
 
     <div class="col-12 col-lg-6">
         <div class="h-100 p-4 border rounded bg-light text-center d-flex flex-column justify-content-between">
             <h2>Most liked</h2>
-            <div>@*@ViewBag.PostMostLiked*@</div>
+            <h3>@ViewBag.PostMostLiked.User.Username</h3>
+            <h4>Likes: @ViewBag.PostMostLikedLikes</h4>
+            <div>
+                @ViewBag.PostMostLiked.Contents
+                @Html.ActionLink("Read...", "Details", "Posts", new { id = ViewBag.PostMostLiked.PostId }, null)
+            </div>
         </div>
     </div>
 

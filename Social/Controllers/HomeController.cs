@@ -16,14 +16,42 @@ namespace Social.Controllers
             if (User.IsInRole("admin"))
             {
                 ViewBag.UsersCount = db.Users.Where(u => u.Role != "admin").Count();
+
                 ViewBag.PostsCount = db.Posts.Count();
+
                 ViewBag.CommentsCount = db.Comments.Count();
+
                 ViewBag.LikesCount = db.Likes.Count();
-                var MostCommentedPostId = db.Comments.GroupBy(c => c.PostId).Select(c => new {PostId = c.Key, Count = c.Count()}).OrderByDescending(c => c.Count).FirstOrDefault();
-                ViewBag.PostMostCommented = db.Posts.Find(MostCommentedPostId.PostId).Contents;
-                var MostLikedPostId = db.Likes.GroupBy(l => l.PostId).Select(l => new {PostId = l.Key, Count = l.Count()}).OrderByDescending (l => l.Count).FirstOrDefault();
-                ViewBag.PostMostLiked = db.Posts.Find(MostLikedPostId.PostId).Contents;
-                //ViewBag.PostMostLiked = 
+
+                // { PostId: 52, Count: 20 }
+                var MostCommentedPostObj = 
+                    db.Comments
+                        .GroupBy(c => c.PostId)
+                        .Select(c => new {PostId = c.Key, Count = c.Count()})
+                        .OrderByDescending(c => c.Count)
+                        .FirstOrDefault();
+                /*
+                 * SELECT PostId, COUNT(*) as Count
+                 * FROM Comments
+                 * GROUP BY PostId
+                 * ORDER BY DESC Count
+                 * LIMIT 1
+                 * */
+
+                ViewBag.PostMostCommentedComments= MostCommentedPostObj.Count;
+                ViewBag.PostMostCommented = db.Posts.Find(MostCommentedPostObj.PostId);
+
+                // { PostId: 52, Count: 20 }
+                var MostLikedPostObj =
+                    db.Likes
+                        .GroupBy(l => l.PostId)
+                        .Select(l => new {PostId = l.Key, Count = l.Count()})
+                        .OrderByDescending (l => l.Count)
+                        .FirstOrDefault();
+
+                ViewBag.PostMostLikedLikes = MostLikedPostObj.Count;
+                ViewBag.PostMostLiked = db.Posts.Find(MostLikedPostObj.PostId);
+
                 return View("IndexAdmin");
             }
 

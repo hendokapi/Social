@@ -10,6 +10,7 @@ namespace Social.Models
         public DBContext()
             : base("name=DBContext")
         {
+            // this.Configuration.LazyLoadingEnabled = false;
         }
 
         public virtual DbSet<User> Users { get; set; }

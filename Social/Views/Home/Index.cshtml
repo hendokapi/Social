@@ -1,26 +1,65 @@
-﻿<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="aspnetTitle">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-            a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-            is an ideal platform for building RESTful applications on the .NET Framework.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301870">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
-        </section>>
+﻿@model List<Social.Models.Post>
+
+<main>
+    @if (User.IsInRole("user"))
+    {
+        <form class="mb-4">
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Post something</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <div class="input-group mb-3">
+                <input type="file" class="form-control" id="inputGroupFile02">
+                <label class="input-group-text" for="inputGroupFile02">Upload</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Post</button>
+        </form>
+    }
+
+    <div class="row row-cols-1 g-4">
+        @foreach (var post in Model)
+        {
+            @*<li>@post.Contents @Html.ActionLink("Read", "Details", "Posts", null, new { id = post.PostId })</li>*@
+            <div class="col">
+                <div class="card">
+                    @*<img src="..." class="card-img-top" alt="...">*@
+                    <div class="card-body">
+                        <h5 class="card-title">@post.User.Username</h5>
+                        <p class="card-text">@post.Contents <a href="/posts/details/@post.PostId">...read all</a></p>
+                        @post.Likes.Count() Likes
+                        <a href="#" class="btn btn-danger card-link">Like</a>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var comment in post.Comments)
+                        {
+                            <li class="list-group-item"><span class="badge rounded-pill text-bg-secondary">@comment.User.Username</span> @comment.Contents</li>
+                        }
+                    </ul>
+                    <form class="m-4">
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Add a comment</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Comment</button>
+                    </form>
+                </div>
+            </div>
+        }
     </div>
+
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
 </main>

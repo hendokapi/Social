@@ -6,22 +6,22 @@ namespace Social.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class Post
+    public partial class Comment
     {
         [Key]
-        public int PostId { get; set; }
+        public int CommentId { get; set; }
 
         [Required]
         public string Contents { get; set; }
 
         public DateTime? PostedAt { get; set; }
 
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
+
+        public int PostId { get; set; }
+
+        public virtual Post Post { get; set; }
 
         public virtual User User { get; set; }
-
-        public virtual ICollection<Comment> Comments { get; set; }
-
-        public virtual ICollection<Like> Likes { get; set; }
     }
 }

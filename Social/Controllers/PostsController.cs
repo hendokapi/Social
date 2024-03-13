@@ -14,13 +14,8 @@ namespace Social.Controllers
     {
         private DBContext db = new DBContext();
 
-        // GET: Posts
-        public ActionResult Index()
-        {
-            var postsToList = db.Posts.ToList();
-
-            var posts = db.Posts.Include(p => p.User).ToList();
-            
+        public ActionResult Index() {
+            var posts = db.Posts.ToList();
             return View(posts);
         }
 
@@ -31,7 +26,6 @@ namespace Social.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            // TODO: expand the User field
             Post post = db.Posts.Find(id);
             if (post == null)
             {
@@ -43,7 +37,6 @@ namespace Social.Controllers
         // GET: Posts/Create
         public ActionResult Create()
         {
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName");
             return View();
         }
 
@@ -61,7 +54,6 @@ namespace Social.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", post.UserId);
             return View(post);
         }
 
@@ -77,7 +69,6 @@ namespace Social.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", post.UserId);
             return View(post);
         }
 
@@ -94,7 +85,6 @@ namespace Social.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(db.Users, "UserId", "UserName", post.UserId);
             return View(post);
         }
 
@@ -114,13 +104,36 @@ namespace Social.Controllers
         }
 
         // POST: Posts/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             Post post = db.Posts.Find(id);
-            db.Posts.Remove(post);
-            db.SaveChanges();
+
+            if (User.IsInRole("admin"))
+            {
+                db.Posts.Remove(post);
+                db.SaveChanges();
+            }
+
+            if (User.IsInRole("user"))
+            {
+                var userId = Convert.ToInt32(HttpContext.User.Identity.Name);
+                if (post.UserId == userId)
+                {
+                    db.Posts.Remove(post);
+                    db.SaveChanges();
+                }
+            }
+
+            // TODO: commento va eleminato
+            //foreach (var comment in post.Comments)
+            //{
+            //    comment.PostId = 2;
+            //    db.Entry(comment).State = EntityState.Modified;
+            //}
+
             return RedirectToAction("Index");
         }
 
